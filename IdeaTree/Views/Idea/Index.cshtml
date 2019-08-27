@@ -1,0 +1,179 @@
+﻿@model IdeaTree.Models.IdeaPublicModel
+@{
+    ViewData["Title"] = Model.idea != null ? Model.idea.Title : "";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        @if (Model.idea != null)
+        {
+            <h1 class="center">
+                @Model.idea.Title
+            </h1>
+            <p class="center">
+                <small>
+                    @Model.idea.PostDate.ToString("d MMM yyyy")
+                    @if (Model.idea.PostedBy != null)
+                    {
+                        @Html.Raw("by " + Model.idea.PostedBy.Name)
+                    }
+                </small>
+            </p>
+            <p class="text-break text-justify">
+                @Model.idea.Description
+            </p>
+            <ul class="list-group list-group-horizontal-md">
+                <li class="list-group-item"><button class="btn btn-link" onclick="SubmitVote(this);"><i class="@Html.Raw(Model.HasVoted ? "fas" : "far") fa-thumbs-up fa-2x"></i><span class="votecounter">@Model.VoteCount</span></button></li>
+            </ul>
+            <br />
+            <ul class="nav nav-tabs" id="ideaPageTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="discussion-tab" data-toggle="tab" href="#discussion" role="tab" aria-controls="discussion" aria-selected="true">Discussion</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="ideaPageTabContent">
+                <div class="tab-pane fade show active border-right border-left border-bottom" id="discussion" role="tabpanel" aria-labelledby="discussion-tab">
+                    @if (Context.User.Identities.Any(i => i.IsAuthenticated))
+                    {
+                        <div class="p-3">
+                            <div class="form-group ">
+                                <textarea rows="5" id="commenttxt" style="width:100%;" placeholder="What do you think about this idea, write it here."></textarea>
+                            </div>
+                            <button type="button" class="btn btn-primary" onclick="SubmitComment();">Post Comment</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="p-3 center dullbg">
+                            Only logged in members can post comment.
+                        </p>
+                    }
+                    <div class="table-responsive p-3 mt-2">
+                        <table class="table table-striped">
+                            <tbody>
+                                @foreach (var c in Model.Comments)
+                                {
+                                    <tr class="border-bottom">
+                                        <td>
+                                            @if (string.IsNullOrEmpty(c.PostedBy.Image))
+                                            {
+
+                                                <i class="fas fa-3x fa-user-astronaut"></i>
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <span class="font-weight-bold">@c.PostedBy.Name</span> <small class="right">@c.CreateDate.ToString("d MMM yyyy")</small>
+                                                @if (Context.User.Identities.Any(i => i.IsAuthenticated))
+                                                {
+                                                    if (Context.User.Identity.Name == c.PostedBy.Phone)
+                                                    {
+                                                        <button class="btn btn-link" onclick="DeleteComment(@c.ID)"><i class="far fa-trash-alt"></i></button>
+                                                    }
+
+                                                }
+                                            </div>
+                                            <p class="pt-2">
+                                                @c.Content.Replace("\n", "<br />")
+                                            </p>
+                                        </td>
+                                    </tr>
+                                }
+                                @if (Model.Comments.Count == 0)
+                                {
+                                    <tr>
+                                        <td class="dullbg"><p class="font-italic m-3 "><i class="far fa-comments"></i> No Comments Yet.</p></td>
+                                    </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts{
+    @if (Context.User.Identities.Any(i => i.IsAuthenticated))
+    {
+        <script>
+            function SubmitVote(ele) {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Content("~/Idea/Vote/" + Utility.TextToURL(Model.idea.Title))',
+                    success: function (data) {
+                        if (data.result) {
+                            if (data.voted) {
+                                $(ele).children("i.fa-thumbs-up").removeClass("far");
+                                $(ele).children("i.fa-thumbs-up").addClass("fas");
+                            } else {
+                                $(ele).children("i.fa-thumbs-up").removeClass("fas");
+                                $(ele).children("i.fa-thumbs-up").addClass("far");
+                            }
+                            $(ele).children("span.votecounter").html(data.count);
+                        } else {
+                            alert(data.message);
+                        }
+                    }
+                });
+            }
+
+            function SubmitComment() {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Content("~/Idea/PostComment/")',
+                        data: { id: '@Utility.TextToURL(Model.idea.Title)', comment: $("#commenttxt").val() },
+                        success: function (data) {
+                            if (data.result) {
+                                location.reload(true);
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                });
+            }
+
+            function DeleteComment(id) {
+                if (confirm('You are going to delete a comment.')) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Content("~/Idea/DeleteComment/")',
+                        data: { id: id },
+                        success: function (data) {
+                            if (data.result) {
+                                location.reload(true);
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                    });
+                }
+            }
+        </script>
+    }
+    else
+    {
+        <script>
+            function SubmitVote(ele) {
+                alert("You are not logged in.");
+            }
+            function SubmitComment() {
+                alert("You are not logged in.");
+            }
+            function DeleteComment(id) {
+                alert("You are not logged in.");
+            }
+        </script>
+    }
+}
+

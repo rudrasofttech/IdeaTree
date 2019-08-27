@@ -1,0 +1,43 @@
+﻿@model IdeaTree.Models.CreateIdeaModel
+
+@{
+    ViewData["Title"] = "Post Your Idea";
+}
+
+
+<div class="row justify-content-center align-items-center">
+    <div class="col-6">
+        <h2>What's Your Idea</h2>
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <small id="Title" class="form-text text-muted">Give your idea a short title. Try to keep it simple and to the point.</small>
+                <input asp-for="Title" class="form-control" placeholder="Example: Garbage collecting Robot"/>
+                <span asp-validation-for="Title" class="text-danger"></span>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <small id="Description" class="form-text text-muted">Describe the idea in detail here.</small>
+                <textarea asp-for="Description" class="form-control" rows="8"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category" class="control-label"></label>
+                <small id="Description" class="form-text text-muted">At present we only have one category more will follow soon.</small>
+                <select asp-for="Category" class="form-control">
+                    <option value="1">Gadget</option>
+                </select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    
+}
