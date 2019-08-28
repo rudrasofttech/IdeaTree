@@ -130,6 +130,7 @@ namespace IdeaTree.Controllers
                     m.Newsletter = model.Newsletter;
                     m.CreateDate = DateTime.UtcNow;
                     m.MType = MemberType.Member;
+                    m.Status = StatusType.Unapproved;
                     Random random = new Random();
                     string otp = string.Format("{0}{1}{2}{3}{4}{5}", random.Next(0, 9).ToString(), random.Next(0, 9).ToString(), random.Next(0, 9).ToString(), random.Next(0, 9).ToString(), random.Next(0, 9).ToString(), random.Next(0, 9).ToString());
                     m.Password = otp;

@@ -26,6 +26,8 @@ namespace IdeaTree.Models
         public bool Newsletter { get; set; }
 
         public DateTime? LastLogon { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public Member ModifiedBy { get; set; }
     }
 
     public class Idea
@@ -77,5 +79,11 @@ namespace IdeaTree.Models
     {
         Admin = 1,
         Member = 2
+    }
+
+    public class Country
+    {
+        public string Abbr { get; set; }
+        public string Full { get; set; }
     }
 }

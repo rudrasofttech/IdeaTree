@@ -33,9 +33,14 @@ namespace IdeaTree
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole", policy => policy.RequireRole("Admin"));
+            });
 
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().AddRazorPagesOptions(options => {
+                options.Conventions.AuthorizeFolder("/Admin", "RequireAdministratorRole");
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<IdeaTreeContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("IdeaTreeContext")));
@@ -43,6 +48,7 @@ namespace IdeaTree
             {
                 options.LoginPath = "/Home/login";
                 options.LogoutPath = "/Home/signout";
+                options.AccessDeniedPath = "/Home";
             });
 
         }
@@ -70,6 +76,7 @@ namespace IdeaTree
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
+                
                 routes.MapRoute("deletecomment", "idea/DeleteComment",
                defaults: new { controller = "Idea", action = "DeleteComment" });
                 routes.MapRoute("postcomment", "idea/PostComment",
