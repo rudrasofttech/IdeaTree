@@ -1,0 +1,47 @@
+﻿@page
+@model IdeaTree.Pages.Admin.EditIdeaModel
+
+@{
+    ViewData["Title"] = "Edit Idea";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+    ViewData["IdeasNavActive"] = "active";
+}
+
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-user">
+
+                <div class="card-body">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="IdeaID" />
+                        <div class="form-group">
+                            <label asp-for="IdeaTitle" class="control-label">Title</label>
+                            <input asp-for="IdeaTitle" class="form-control" />
+                            <span asp-validation-for="IdeaTitle" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="IdeaDescription" class="control-label">Description</label>
+                            <textarea asp-for="IdeaDescription" class="form-control" rows="10" style="max-height:200px;"></textarea>
+                            <span asp-validation-for="IdeaDescription" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="IdeaTags" class="control-label">Tags</label>
+                            <input asp-for="IdeaTags" class="form-control" />
+                            <span asp-validation-for="IdeaTags" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="IdeaStatus" class="control-label">Status</label>
+                            <select asp-for="IdeaStatus" class="form-control" asp-items="Html.GetEnumSelectList<StatusType>()"></select>
+                            <span asp-validation-for="IdeaStatus" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

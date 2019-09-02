@@ -19,6 +19,7 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.Idea[0].Title)
                                     </th>
+                                    <th>Votes</th>
                                     <th>
                                         @Html.DisplayNameFor(model => model.Idea[0].PostDate)
                                     </th>
@@ -36,7 +37,7 @@
                                 {
                                     <tr>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.Title)
+                                            <a href="@Url.Content("~/idea/" + Utility.TextToURL(item.Title))" target="_blank">@item.Title</a>
                                             <div class="modal fade" id="Ideadescmodel-@item.ID" tabindex="-1" role="dialog" aria-labelledby="Label-@item.ID" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
@@ -48,13 +49,29 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             @item.Description
+                                                            @if (!string.IsNullOrEmpty(item.Tags))
+                                                            {
+                                                                <br/>
+                                                                <label>Tags</label><br/>
+                                                                @item.Tags
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            @Html.DisplayFor(modelItem => item.PostDate)
+                                            @{
+                                                var v = Model.Votes.FirstOrDefault(t => t.Item1 == item.ID);
+                                                if (v != null)
+                                                {
+                                                    @Html.Raw(v.Item2)
+                                                }
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @item.PostDate.ToShortDateString()
                                         </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.ModifyDate)
@@ -63,11 +80,11 @@
                                             @Html.DisplayFor(modelItem => item.Status)
                                         </td>
                                         <td>
-                                            <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                                            <a asp-page="./EditIdea" asp-route-id="@item.ID">Edit</a> |
                                             <!-- Button trigger modal -->
-                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#Ideadescmodel-@item.ID">
+                                            <a href="#" data-toggle="modal" data-target="#Ideadescmodel-@item.ID">
                                                 Details
-                                            </button> |
+                                            </a> |
                                             <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
                                         </td>
                                     </tr>

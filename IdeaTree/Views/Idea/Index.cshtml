@@ -27,15 +27,15 @@
             </ul>
             <br />
             <ul class="nav nav-tabs" id="ideaPageTab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="discussion-tab" data-toggle="tab" href="#discussion" role="tab" aria-controls="discussion" aria-selected="true">Discussion</a>
+                <li class="nav-item active">
+                    <a class="nav-link" id="discussion-tab" data-toggle="tab" href="#discussion" role="tab" aria-controls="discussion" aria-selected="true">Discussion</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#moreideas" role="tab" aria-controls="moreideas" aria-selected="false">More From @Model.idea.PostedBy.Name</a>
                 </li>
             </ul>
             <div class="tab-content" id="ideaPageTabContent">
-                <div class="tab-pane fade show active border-right border-left border-bottom" id="discussion" role="tabpanel" aria-labelledby="discussion-tab">
+                <div class="tab-pane active border-right border-left border-bottom" id="discussion" role="tabpanel" aria-labelledby="discussion-tab">
                     @if (Context.User.Identities.Any(i => i.IsAuthenticated))
                     {
                         <div class="p-3">
@@ -97,7 +97,7 @@
                         </table>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="moreideas" role="tabpanel" aria-labelledby="moreideas-tab">
+                <div class="tab-pane" id="moreideas" role="tabpanel" aria-labelledby="moreideas-tab">
                     <table class="table mt-3  table-borderless">
                         <tbody>
                             @foreach (var item in Model.OtherIdeasFromOwner)
@@ -189,5 +189,11 @@
             }
         </script>
     }
+
+    <script>
+        $(function () {
+            $('#ideaPageTab li:first-child a').tab('show')
+        })
+    </script>
 }
 

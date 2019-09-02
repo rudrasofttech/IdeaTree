@@ -16,24 +16,27 @@
                     <div class="row">
                         <div class="col-5 col-md-4">
                             <div class="icon-big text-center icon-warning">
-                                <i class="nc-icon nc-globe text-warning"></i>
+                                <i class="far fa-lightbulb text-warning"></i>
                             </div>
                         </div>
                         <div class="col-7 col-md-8">
                             <div class="numbers">
-                                <p class="card-category">Capacity</p>
-                                <p class="card-title">150GB
+                                <p class="card-category">Ideas</p>
+                                <p class="card-title">@Model.IdeaCount
                                 <p>
                             </div>
                         </div>
                     </div>
                 </div>
+                @if (Model.LastIdea != null)
+                {
                 <div class="card-footer ">
                     <hr>
-                    <div class="stats">
-                        <i class="fa fa-refresh"></i> Update Now
+                    <div class="stats" title="Last Idea Posted On">
+                        <i class="fa fa-calendar-o"></i> @Model.LastIdea.PostDate.ToString()
                     </div>
                 </div>
+                }
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6">
@@ -42,24 +45,27 @@
                     <div class="row">
                         <div class="col-5 col-md-4">
                             <div class="icon-big text-center icon-warning">
-                                <i class="nc-icon nc-money-coins text-success"></i>
+                                <i class="fas fa-userscoins text-success"></i>
                             </div>
                         </div>
                         <div class="col-7 col-md-8">
                             <div class="numbers">
-                                <p class="card-category">Revenue</p>
-                                <p class="card-title">$ 1,345
+                                <p class="card-category">Members</p>
+                                <p class="card-title">@Model.MemberCount
                                 <p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer ">
-                    <hr>
-                    <div class="stats">
-                        <i class="fa fa-calendar-o"></i> Last day
+                @if (Model.LastMember != null)
+                {
+                    <div class="card-footer ">
+                        <hr>
+                        <div class="stats" title="Last Member Registered On">
+                            <i class="fa fa-calendar-o"></i> @Model.LastMember.CreateDate.ToString()
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6">
@@ -68,24 +74,27 @@
                     <div class="row">
                         <div class="col-5 col-md-4">
                             <div class="icon-big text-center icon-warning">
-                                <i class="nc-icon nc-vector text-danger"></i>
+                                <i class="far fa-comments text-danger"></i>
                             </div>
                         </div>
                         <div class="col-7 col-md-8">
                             <div class="numbers">
-                                <p class="card-category">Errors</p>
-                                <p class="card-title">23
+                                <p class="card-category">Comments</p>
+                                <p class="card-title">@Model.CommentCount
                                 <p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer ">
-                    <hr>
-                    <div class="stats">
-                        <i class="fa fa-clock-o"></i> In the last hour
+                @if (Model.LastComment != null)
+                {
+                    <div class="card-footer ">
+                        <hr>
+                        <div class="stats" title="Last Comment Posted On">
+                            <i class="fa fa-calendar-o"></i> @Model.LastComment.CreateDate.ToString()
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-6">
@@ -99,19 +108,22 @@
                         </div>
                         <div class="col-7 col-md-8">
                             <div class="numbers">
-                                <p class="card-category">Followers</p>
-                                <p class="card-title">+45K
+                                <p class="card-category">Votes</p>
+                                <p class="card-title">@Model.VoteCount
                                 <p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer ">
-                    <hr>
-                    <div class="stats">
-                        <i class="fa fa-refresh"></i> Update now
+                @if (Model.LastVote != null)
+                {
+                    <div class="card-footer ">
+                        <hr>
+                        <div class="stats" title="Last Vote Casted On">
+                            <i class="fa fa-calendar-o"></i> @Model.LastVote.CreateDate.ToString()
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </div>
     </div>

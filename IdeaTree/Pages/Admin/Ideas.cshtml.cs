@@ -19,10 +19,12 @@ namespace IdeaTree.Pages.Admin
         }
 
         public IList<Idea> Idea { get;set; }
+        public IList<Tuple<int, int>> Votes { get; set; }
 
         public async Task OnGetAsync()
         {
             Idea = await _context.Idea.OrderByDescending(o => o.PostDate).ToListAsync();
+            Votes = _context.Vote.GroupBy(g => g.VoteTo.ID).Select(g => new Tuple<int, int>( g.Key, g.Count() )).ToList< Tuple<int, int>>();
         }
     }
 }

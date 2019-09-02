@@ -22,7 +22,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
-    <PackageReference Include="React.AspNet" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

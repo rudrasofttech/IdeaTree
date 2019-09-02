@@ -62,9 +62,9 @@
                                         </td>
                                         <td>
                                             <a href="@Url.Content("~/admin/edituser?id=" + item.ID)">Edit</a> |
-                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#Userdetailmodel-@item.ID">
+                                            <a href="#" data-toggle="modal" data-target="#Userdetailmodel-@item.ID">
                                                 Details
-                                            </button>
+                                            </a>
                                             <!-- Modal -->
                                             <div class="modal fade" id="Userdetailmodel-@item.ID" tabindex="-1" role="dialog" aria-labelledby="Label-@item.ID" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
