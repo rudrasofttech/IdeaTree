@@ -4,14 +4,16 @@ using IdeaTree.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdeaTree.Migrations
 {
     [DbContext(typeof(IdeaTreeContext))]
-    partial class IdeaTreeContextModelSnapshot : ModelSnapshot
+    [Migration("20190829073642_Mig7")]
+    partial class Mig7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,6 +52,8 @@ namespace IdeaTree.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("Category");
+
                     b.Property<string>("Description");
 
                     b.Property<int?>("ModifiedByID");
@@ -61,8 +65,6 @@ namespace IdeaTree.Migrations
                     b.Property<int?>("PostedByID");
 
                     b.Property<int>("Status");
-
-                    b.Property<string>("Tags");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -118,42 +120,6 @@ namespace IdeaTree.Migrations
                     b.HasIndex("ModifiedByID");
 
                     b.ToTable("Member");
-                });
-
-            modelBuilder.Entity("IdeaTree.Models.Message", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("BCC");
-
-                    b.Property<string>("Body")
-                        .IsRequired();
-
-                    b.Property<string>("CC");
-
-                    b.Property<DateTime>("CreateDate");
-
-                    b.Property<string>("FromEmail");
-
-                    b.Property<string>("FromName")
-                        .HasMaxLength(100);
-
-                    b.Property<DateTime>("SentDate");
-
-                    b.Property<string>("Subject")
-                        .IsRequired()
-                        .HasMaxLength(100);
-
-                    b.Property<string>("ToEmail");
-
-                    b.Property<string>("ToName")
-                        .HasMaxLength(100);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Message");
                 });
 
             modelBuilder.Entity("IdeaTree.Models.Vote", b =>

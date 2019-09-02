@@ -36,7 +36,7 @@ namespace IdeaTree.Models
         [MaxLength(250), Required]
         public string Title { get; set; }
         public string Description { get; set; }
-        public CategoryType Category { get; set; }
+        public string Tags { get; set; }
         public DateTime PostDate { get; set; }
         public Member PostedBy { get; set; }
         public DateTime? ModifyDate { get; set; }
@@ -59,6 +59,29 @@ namespace IdeaTree.Models
         public DateTime CreateDate { get; set; }
         public String Content { get; set; }
         public Idea PostedTo { get; set; }
+        public StatusType Status { get; set; }
+    }
+
+    public class Message
+    {
+        public int ID { get; set; }
+        [DataType(DataType.EmailAddress)]
+        public string ToEmail { get; set; }
+        [MaxLength(100)]
+        public string ToName { get; set; }
+        [DataType(DataType.EmailAddress)]
+        public string FromEmail { get; set; }
+        [MaxLength(100)]
+        public string FromName { get; set; }
+        public string CC { get; set; }
+        public string BCC { get; set; }
+        [MaxLength(100)]
+        [Required]
+        public string Subject { get; set; }
+        [Required]
+        public string Body { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime SentDate { get; set; }
     }
 
 

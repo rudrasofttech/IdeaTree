@@ -13,9 +13,10 @@ namespace IdeaTree.Models
         {
         }
 
-        public DbSet<IdeaTree.Models.Idea> Idea { get; set; }
+        public DbSet<Idea> Idea { get; set; }
         public DbSet<Member> Member { get; set; }
         public DbSet<Vote> Vote { get; set; }
         public DbSet<Comment> Comment { get; set; }
+        public DbSet<Message> Message { get; set; }
     }
 }

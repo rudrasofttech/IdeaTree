@@ -51,10 +51,11 @@ namespace IdeaTree.Models
         public int VoteCount { get; set; }
         public bool HasVoted { get; set; }
         public List<Comment> Comments { get; set; }
-
+        public List<Idea> OtherIdeasFromOwner { get; set; }
         public IdeaPublicModel()
         {
             Comments = new List<Comment>();
+            OtherIdeasFromOwner = new List<Idea>();
         }
     }
 

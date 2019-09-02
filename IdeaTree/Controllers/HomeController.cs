@@ -72,7 +72,7 @@ namespace IdeaTree.Controllers
                 if (i == null)
                 {
                     i = new Idea();
-                    i.Category = model.Category;
+                    //i.Category = model.Category;
                     i.Description = model.Description;
                     i.PostDate = DateTime.UtcNow;
                     if (HttpContext.User.Identities.Any(u => u.IsAuthenticated))
@@ -188,7 +188,7 @@ namespace IdeaTree.Controllers
             ViewBag.ReturnUrl = ReturnUrl;
             if (ModelState.IsValid)
             {
-                Member m = _context.Member.FirstOrDefault(t => t.Phone == model.Phone && t.Password == model.Password);
+                Member m = _context.Member.FirstOrDefault(t => t.Phone == model.Phone && t.Password == model.Password && t.Status != StatusType.Deleted);
                 if (m != null)
                 {
                     if (m.PasswordGenerateDate < DateTime.UtcNow.AddMinutes(-20))

@@ -31,7 +31,7 @@
                     <a class="nav-link active" id="discussion-tab" data-toggle="tab" href="#discussion" role="tab" aria-controls="discussion" aria-selected="true">Discussion</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#moreideas" role="tab" aria-controls="moreideas" aria-selected="false">More From @Model.idea.PostedBy.Name</a>
                 </li>
             </ul>
             <div class="tab-content" id="ideaPageTabContent">
@@ -97,7 +97,21 @@
                         </table>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                <div class="tab-pane fade" id="moreideas" role="tabpanel" aria-labelledby="moreideas-tab">
+                    <table class="table mt-3  table-borderless">
+                        <tbody>
+                            @foreach (var item in Model.OtherIdeasFromOwner)
+                            {
+                                <tr>
+                                    <td>
+                                        <h4 class="card-title"><a href="@Url.Content("~/Idea/" + IdeaTree.Utility.TextToURL(item.Title))">@item.Title</a></h4>
+                                        <p class="card-text">@item.Description.Substring(0, item.Description.Length > 100 ? 100 : item.Description.Length)</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         }
     </div>

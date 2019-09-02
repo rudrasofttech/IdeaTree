@@ -40,7 +40,8 @@ namespace IdeaTree.Controllers
                     else { model.HasVoted = true; }
                     
                 }
-                model.Comments.AddRange(_context.Comment.Where(t => t.PostedTo.ID == idea.ID).OrderByDescending(t => t.CreateDate).ToList());
+                model.Comments.AddRange(_context.Comment.Where(t => t.PostedTo.ID == idea.ID && t.Status != StatusType.Deleted).OrderByDescending(t => t.CreateDate).ToList());
+                model.OtherIdeasFromOwner.AddRange(_context.Idea.OrderByDescending(t => t.PostDate).Where(t => t.PostedBy.ID == idea.PostedBy.ID && t.ID != idea.ID).ToList());
             }
             model.idea = idea;
             return View(model);
@@ -114,6 +115,7 @@ namespace IdeaTree.Controllers
                     c.CreateDate = DateTime.UtcNow;
                     c.PostedBy = m;
                     c.PostedTo = idea;
+                    c.Status = StatusType.Unapproved;
                     _context.Add<Comment>(c);
                     _context.SaveChanges();
                     return Json(new { result = true });

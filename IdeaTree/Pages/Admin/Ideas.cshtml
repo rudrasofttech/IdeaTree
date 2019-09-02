@@ -37,12 +37,6 @@
                                     <tr>
                                         <td>
                                             @Html.DisplayFor(modelItem => item.Title)
-                                            <span style="display:none;">
-                                                @Html.DisplayFor(modelItem => item.Description)
-                                            </span>
-                                            
-
-                                            <!-- Modal -->
                                             <div class="modal fade" id="Ideadescmodel-@item.ID" tabindex="-1" role="dialog" aria-labelledby="Label-@item.ID" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
