@@ -7,6 +7,8 @@ namespace IdeaTree.Models
     public class SignupModel
     {
         [Required]
+        [RegularExpression("^[a-zA-Z0-9]*$")]
+        [MaxLength(100)]
         public string Name { get; set; }
         [Required, MaxLength(15)]
         public string Phone { get; set; }
@@ -59,4 +61,24 @@ namespace IdeaTree.Models
         }
     }
 
+    public class ProfilePublicModel
+    {
+        public Member Member { get; set; }
+        public List<Idea> Ideas { get; set; }
+    }
+
+
+    public class ManageProfileModel
+    {
+        [Key]
+        public string Phone { get; set; }
+        public string Name { get; set; }
+        [MaxLength(100)]
+        public string FullName { get; set; }
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+        public string Bio { get; set; }
+        public string Image { get; set; }
+        public bool Newsletter { get; set; }
+    }
 }

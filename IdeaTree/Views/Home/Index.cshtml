@@ -9,17 +9,17 @@
     <div class="row justify-content-center">
 
         <div class="col-md-12">
-            <table class="table mt-3  table-borderless">
+            <table class="table mt-3 table-bordered">
                 <tbody>
                     @foreach (var item in Model.Ideas)
                     {
                         <tr>
                             <td>
-                                <h4 class="card-title"><a href="@Url.Content("~/Idea/" + IdeaTree.Utility.TextToURL(item.Title))">@item.Title</a></h4>
+                                <h4 class="card-title"><a href="@Url.Content("~/Idea/" + IdeaTree.Utility.TextToURL(item.Title))"><i class="far fa-lightbulb"></i> @item.Title</a></h4>
                                 <p class="card-text">@item.Description.Substring(0, item.Description.Length > 100 ? 100 : item.Description.Length)</p>
                                 @if (item.PostedBy != null)
                                 {
-                                    <small>by @item.PostedBy.Name</small>
+                                    <small><i class="far fa-user"></i> by <a href="@Url.Content("~/profile/" + item.PostedBy.Name)">@item.PostedBy.Name</a></small>
                                 }
                             </td>
                         </tr>

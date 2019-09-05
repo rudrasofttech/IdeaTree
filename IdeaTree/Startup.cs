@@ -77,18 +77,12 @@ namespace IdeaTree
             app.UseMvc(routes =>
             {
                 
-                routes.MapRoute("deletecomment", "idea/DeleteComment",
-               defaults: new { controller = "Idea", action = "DeleteComment" });
-                routes.MapRoute("postcomment", "idea/PostComment",
-               defaults: new { controller = "Idea", action = "PostComment" });
-                routes.MapRoute("voteidea", "idea/vote/{*id}",
-               defaults: new { controller = "Idea", action = "Vote" });
-                routes.MapRoute("idea", "idea/{*id}",
-               defaults: new { controller = "Idea", action = "Index" });
-                
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                //routes.MapRoute("deletecomment", "idea/DeleteComment", defaults: new { controller = "Idea", action = "DeleteComment" });
+                //routes.MapRoute("postcomment", "idea/PostComment", defaults: new { controller = "Idea", action = "PostComment" });
+                routes.MapRoute("voteidea", "idea/vote/{*id}", defaults: new { controller = "Idea", action = "Vote" });
+                routes.MapRoute("idea", "idea/{*id}", defaults: new { controller = "Idea", action = "Index" });
+                routes.MapRoute("profile", "profile/{*name}", defaults: new { controller = "Home", action = "Profile" });
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

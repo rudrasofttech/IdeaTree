@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - IdeaTree</title>
+    <title>@ViewData["Title"] - @IdeaTree.Utility.SiteName</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
@@ -36,7 +36,7 @@
                 {
                     if (Context.User.HasClaim(t => t.Type == "FullName"))
                     {
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Account" asp-action="Manage">@Context.User.Claims.FirstOrDefault(t => t.Type == "FullName").Value </a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Manage">@Context.User.Claims.FirstOrDefault(t => t.Type == "FullName").Value </a></li>
                     }
 
                     <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="signout">Signout</a></li>
@@ -59,7 +59,7 @@
 
     <hr />
     <footer>
-        <p>&copy; 2019 - IdeaTree</p>
+        <p>&copy; 2019 - @IdeaTree.Utility.SiteName</p>
     </footer>
 
     <environment include="Development">

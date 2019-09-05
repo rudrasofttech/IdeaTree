@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using System.Text;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdeaTree.Controllers
 {
@@ -28,7 +29,7 @@ namespace IdeaTree.Controllers
         {
             var model = new HomeModel();
             model.Ideas = new List<Idea>();
-            model.Ideas.AddRange(_context.Idea.OrderByDescending(t => t.PostDate).Take(10).ToList());
+            model.Ideas.AddRange(_context.Idea.Include(i => i.PostedBy).OrderByDescending(t => t.PostDate).Take(10).ToList());
             return View(model);
         }
 
@@ -51,7 +52,7 @@ namespace IdeaTree.Controllers
             return View();
         }
 
-        
+
         [Authorize]
         public IActionResult Create()
         {
@@ -121,7 +122,7 @@ namespace IdeaTree.Controllers
             ViewBag.ReturnUrl = ReturnUrl;
             if (ModelState.IsValid)
             {
-                Member m = _context.Member.FirstOrDefault(t => t.Phone == model.Phone);
+                Member m = _context.Member.FirstOrDefault(t => t.Phone == model.Phone || t.Name == model.Name);
                 if (m == null)
                 {
                     m = new Member();
@@ -148,7 +149,14 @@ namespace IdeaTree.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("DuplicatePhone", "Phone is registered.");
+                    if (_context.Member.Count(t => t.Phone == m.Phone) > 0)
+                    {
+                        ModelState.AddModelError("DuplicatePhone", "Phone is registered.");
+                    }
+                    if (_context.Member.Count(t => t.Name == m.Name) > 0)
+                    {
+                        ModelState.AddModelError("DuplicateName", "Choose a unique profile name.");
+                    }
                 }
             }
             return View(model);
@@ -183,7 +191,7 @@ namespace IdeaTree.Controllers
         }
 
         [HttpPost]
-        public IActionResult login(LoginModel model,[FromQuery] string ReturnUrl = null)
+        public IActionResult login(LoginModel model, [FromQuery] string ReturnUrl = null)
         {
             ViewBag.ReturnUrl = ReturnUrl;
             if (ModelState.IsValid)
@@ -232,7 +240,8 @@ namespace IdeaTree.Controllers
                         m.LastLogon = DateTime.UtcNow;
                         _context.Update<Member>(m);
                         _context.SaveChanges();
-                        if (string.IsNullOrEmpty(ReturnUrl)) {
+                        if (string.IsNullOrEmpty(ReturnUrl))
+                        {
                             return RedirectToAction("Index");
                         }
                         else
@@ -256,10 +265,77 @@ namespace IdeaTree.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize]
-        public IActionResult Profile()
+        public IActionResult Profile(string name = "")
         {
-            return View();
+            ProfilePublicModel model = new ProfilePublicModel();
+            Member m = null;
+            if (name != "")
+            {
+                m = _context.Member.FirstOrDefault(temp => temp.Name == name);
+            }
+            else if (HttpContext.User.Identities.Any(u => u.IsAuthenticated))
+            {
+                m = _context.Member.FirstOrDefault(temp => temp.Phone == HttpContext.User.Identity.Name);
+            }
+            if (m != null)
+            {
+                model.Member = m;
+                model.Ideas = _context.Idea.Where(t => t.PostedBy.ID == m.ID).ToList();
+                return View(model);
+            }
+            else
+            {
+                Response.StatusCode = 404;
+                return View("ProfileNotFound");
+            }
+        }
+
+        [Authorize]
+        public IActionResult Manage()
+        {
+            if (HttpContext.User.Identities.Any(u => u.IsAuthenticated))
+            {
+                Member m = _context.Member.FirstOrDefault(temp => temp.Phone == HttpContext.User.Identity.Name);
+                ManageProfileModel model = new ManageProfileModel();
+                model.Bio = m.Bio;
+                model.Email = m.Email;
+                model.FullName = m.FullName;
+                model.Image = m.Image;
+                model.Name = m.Name;
+                model.Newsletter = m.Newsletter;
+                model.Phone = m.Phone;
+
+                return View(model);
+            }
+            else
+            {
+                return RedirectToAction("login");
+            }
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Manage(ManageProfileModel model)
+        {
+            try
+            {
+                Member m = _context.Member.FirstOrDefault(temp => temp.Phone == HttpContext.User.Identity.Name);
+                m.Bio = model.Bio;
+                m.Email = model.Email;
+                m.FullName = model.FullName;
+                m.Image = model.Image;
+                m.Newsletter = model.Newsletter;
+                _context.Attach(m).State = EntityState.Modified;
+                _context.SaveChanges();
+
+
+                return RedirectToAction("Profile", new { name = m.Name });
+            }catch(Exception ex)
+            {
+                ModelState.AddModelError("Error", "We facing a technical issue, please try after some time.");
+                Utility.ReportException(ex.Message, "Error in Home/Manage.");
+                return View(model);
+            }
         }
 
         private string Encrypt(string clearText)

@@ -22,7 +22,9 @@ namespace IdeaTree.Models
         public StatusType Status { get; set; }
         public MemberType MType { get; set; }
         public string Image { get; set; }
-        
+        [MaxLength(150)]
+        public string FullName { get; set; }
+        public string Bio { get; set; }
         public bool Newsletter { get; set; }
 
         public DateTime? LastLogon { get; set; }

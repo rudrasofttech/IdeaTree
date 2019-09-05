@@ -20,18 +20,18 @@
                 </small>
             </p>
             <p class="text-break text-justify">
-                @Model.idea.Description
+                @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.idea.Description).Replace("\n", "<br />"))
             </p>
             <ul class="list-group list-group-horizontal-md">
                 <li class="list-group-item"><button class="btn btn-link" onclick="SubmitVote(this);"><i class="@Html.Raw(Model.HasVoted ? "fas" : "far") fa-thumbs-up fa-2x"></i><span class="votecounter">@Model.VoteCount</span></button></li>
             </ul>
             <br />
             <ul class="nav nav-tabs" id="ideaPageTab" role="tablist">
-                <li class="nav-item active">
-                    <a class="nav-link" id="discussion-tab" data-toggle="tab" href="#discussion" role="tab" aria-controls="discussion" aria-selected="true">Discussion</a>
+                <li class="nav-item ">
+                    <a class="nav-link active" id="discussion-tab" data-toggle="tab" href="#discussion" role="tab" aria-controls="discussion" aria-selected="true">Discussion</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#moreideas" role="tab" aria-controls="moreideas" aria-selected="false">More From @Model.idea.PostedBy.Name</a>
+                    <a class="nav-link" id="moreideas-tab" data-toggle="tab" href="#moreideas" role="tab" aria-controls="moreideas" aria-selected="false">More From @Model.idea.PostedBy.Name</a>
                 </li>
             </ul>
             <div class="tab-content" id="ideaPageTabContent">
@@ -61,7 +61,7 @@
                                             @if (string.IsNullOrEmpty(c.PostedBy.Image))
                                             {
 
-                                                <i class="fas fa-3x fa-user-astronaut"></i>
+                                                <i class="far fa-3x fa-user"></i>
                                             }
                                             else
                                             {
@@ -81,7 +81,7 @@
                                                 }
                                             </div>
                                             <p class="pt-2">
-                                                @c.Content.Replace("\n", "<br />")
+                                                @Html.Raw(System.Net.WebUtility.HtmlEncode(c.Content).Replace("\n", "<br />"))
                                             </p>
                                         </td>
                                     </tr>
@@ -98,13 +98,13 @@
                     </div>
                 </div>
                 <div class="tab-pane" id="moreideas" role="tabpanel" aria-labelledby="moreideas-tab">
-                    <table class="table mt-3  table-borderless">
+                    <table class="table mt-3 table-bordered">
                         <tbody>
                             @foreach (var item in Model.OtherIdeasFromOwner)
                             {
                                 <tr>
                                     <td>
-                                        <h4 class="card-title"><a href="@Url.Content("~/Idea/" + IdeaTree.Utility.TextToURL(item.Title))">@item.Title</a></h4>
+                                        <h4 class="card-title"><a href="@Url.Content("~/Idea/" + IdeaTree.Utility.TextToURL(item.Title))"><i class="far fa-lightbulb"></i> @item.Title</a></h4>
                                         <p class="card-text">@item.Description.Substring(0, item.Description.Length > 100 ? 100 : item.Description.Length)</p>
                                     </td>
                                 </tr>
@@ -192,7 +192,7 @@
 
     <script>
         $(function () {
-            $('#ideaPageTab li:first-child a').tab('show')
+            //$('#ideaPageTab li:first-child a').tab('show')
         })
     </script>
 }

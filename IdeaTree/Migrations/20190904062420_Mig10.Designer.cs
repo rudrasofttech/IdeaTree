@@ -4,14 +4,16 @@ using IdeaTree.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdeaTree.Migrations
 {
     [DbContext(typeof(IdeaTreeContext))]
-    partial class IdeaTreeContextModelSnapshot : ModelSnapshot
+    [Migration("20190904062420_Mig10")]
+    partial class Mig10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,16 +85,11 @@ namespace IdeaTree.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Bio");
-
                     b.Property<string>("Country");
 
                     b.Property<DateTime>("CreateDate");
 
                     b.Property<string>("Email");
-
-                    b.Property<string>("FullName")
-                        .HasMaxLength(150);
 
                     b.Property<string>("Image");
 
@@ -117,6 +114,9 @@ namespace IdeaTree.Migrations
                         .IsRequired();
 
                     b.Property<int>("Status");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(100);
 
                     b.HasKey("ID");
 
