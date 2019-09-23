@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label asp-for="Image" class="col-sm-2 col-form-label"></label>
+                <label class="col-sm-2 col-form-label">Picture</label>
                 <div class="col-sm-10">
                     @if (!string.IsNullOrEmpty(Model.Image))
                     {
@@ -57,9 +57,28 @@
                         <i class="fa-7x far fa-user"></i>
 
                     }
-                    <button type="button" class="btn m-2 btn-sm">Upload Image</button>
-                    <input asp-for="Image" type="hidden" class="form-control" />
+                    <button type="button" class="btn m-2 btn-sm" data-toggle="modal" data-target="#profilePicModal">Upload Image</button>
+                    <!-- Modal -->
+                    <input type="file" id="pictureFile" onchange="readURL(this);" accept="image/jpeg, image/png" />
+                    <div style="max-width:200px; max-height:200px;overflow:auto;">
+                        <img id="blah" src="#"  alt="your image" />
+                    </div>
 
+                    <script>
+                        function readURL(input) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
+
+                                reader.onload = function (e) {
+                                    $('#blah')
+                                        .attr('src', e.target.result)
+                                        ;
+                                };
+
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+                    </script>
                 </div>
             </div>
             <div class="form-group row">
