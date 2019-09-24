@@ -13,6 +13,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace IdeaTree.Controllers
 {
@@ -319,6 +321,20 @@ namespace IdeaTree.Controllers
         {
             try
             {
+                if (model.Image != null)
+                {
+                    var imageName = Guid.NewGuid() + ".jpg";
+                    string base64 = model.Image.Split(',')[1];
+                    byte[] bytes = Convert.FromBase64String(base64);
+
+                    using (Image image = Image.FromStream(new MemoryStream(bytes)))
+                    {
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ProfileImages/", imageName);
+                        image.Save(path, ImageFormat.Jpeg);
+                        model.Image = imageName;
+                    }
+                }
+
                 Member m = _context.Member.FirstOrDefault(temp => temp.Phone == HttpContext.User.Identity.Name);
                 m.Bio = model.Bio;
                 m.Email = model.Email;
@@ -330,7 +346,8 @@ namespace IdeaTree.Controllers
 
 
                 return RedirectToAction("Profile", new { name = m.Name });
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 ModelState.AddModelError("Error", "We facing a technical issue, please try after some time.");
                 Utility.ReportException(ex.Message, "Error in Home/Manage.");

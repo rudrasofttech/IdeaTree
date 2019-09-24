@@ -3,7 +3,7 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
     /*padding-top: 50px;
     padding-bottom: 20px;*/
-    
+
 }
 
 /* Wrapping element */
@@ -29,16 +29,16 @@ body {
     margin: 15px;
 }
 
-.afterotp{
-    display:none;
+.afterotp {
+    display: none;
 }
 
-.card.h210{
-    height:210px;
+.card.h210 {
+    height: 210px;
 }
 
-.center{
-    text-align:center;
+.center {
+    text-align: center;
 }
 
 .votecounter {
@@ -61,3 +61,63 @@ body {
         display: none;
     }
 }
+
+
+/* ///////////////////// Profile Photo //////////////*/
+.profile-img-container {
+    position: relative;
+    display: inline-block; /* added */
+    overflow: hidden; /* added */
+}
+
+    .profile-img-container img {
+        width: 150px;
+    }
+        /* remove if using in grid system */
+
+
+        .profile-img-container img:hover {
+            opacity: 0.5
+        }
+
+    .profile-img-container:hover a {
+        opacity: 1; /* added */
+        top: 0; /* added */
+        z-index: 500;
+    }
+        /* added */
+        .profile-img-container:hover a span {
+            top: 50%;
+            position: absolute;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+            font-size: 22px;
+            color: white;
+            text-shadow: 2px 2px 4px #000000;
+        }
+    /* added */
+    .profile-img-container a {
+        display: block;
+        position: absolute;
+        top: -100%;
+        opacity: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        text-align: center;
+        color: inherit;
+    }
+
+/* //////////////////////// File uploader ////////////////////////////////*/
+.PI-droppable {
+    background: #eaeaea;
+    color: #909090;
+    padding: 10px 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .PI-droppable.dragover {
+        background: #00CC71;
+    }
