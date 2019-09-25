@@ -49,14 +49,15 @@ $('.upload-result').on('click', function (ev) {
 });
 
 function popupResult(result) {
-    console.log(result.src)
-    $('.disimg').attr('src', result.src);
+    $('.user-placeholder').addClass('hidden');
+    $('.disimg').attr('src', result.src).removeClass('hidden');
     $('.pp-upload').val(result.src);
     $('#UploadPIModal').modal('hide');
 }
 
 $('.remove-image').on('click', function () {
-    $('.disimg').attr('src', '/ProfileImages/blank-user-150x150.jpg');
+    $('.disimg').addClass('hidden');
+    $('.user-placeholder').removeClass('hidden');
     $('.pp-upload').val('');
     $('#UploadPIModal').modal('hide');
 });

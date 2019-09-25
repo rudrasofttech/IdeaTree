@@ -323,13 +323,13 @@ namespace IdeaTree.Controllers
             {
                 if (model.Image != null)
                 {
-                    var imageName = Guid.NewGuid() + ".jpg";
+                    var imageName = string.Format("{0}.jpg", Guid.NewGuid());
                     string base64 = model.Image.Split(',')[1];
                     byte[] bytes = Convert.FromBase64String(base64);
 
                     using (Image image = Image.FromStream(new MemoryStream(bytes)))
                     {
-                        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/ProfileImages/", imageName);
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), @IdeaTree.Utility.ProfileImagePath, imageName);
                         image.Save(path, ImageFormat.Jpeg);
                         model.Image = imageName;
                     }

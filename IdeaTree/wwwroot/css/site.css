@@ -121,3 +121,15 @@ body {
     .PI-droppable.dragover {
         background: #00CC71;
     }
+
+/*/////// Other ////////*/
+.circleImage {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: white;
+}
+
+.hidden{
+    display:none !important;
+}

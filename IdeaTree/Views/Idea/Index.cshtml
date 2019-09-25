@@ -15,7 +15,17 @@
                     @Model.idea.PostDate.ToString("d MMM yyyy")
                     @if (Model.idea.PostedBy != null)
                     {
-                        @Html.Raw("by " + Model.idea.PostedBy.Name)
+                        var imagepath = Model.idea.PostedBy.Image;
+                        if (!string.IsNullOrEmpty(imagepath))
+                        {
+                            imagepath = "<img src='/ProfileImages/" + imagepath + "' class='circleImage' />";
+                        }
+                        else
+                        {
+                            imagepath = "<i class='far fa-user'></i>";
+                        }
+
+                        @Html.Raw(imagepath + " by " + Model.idea.PostedBy.Name)
                     }
                 </small>
             </p>

@@ -49,6 +49,7 @@
         ele.addEventListener('change', function () {
             //console.log(input.value)
             readFile();
+            $('.modal-footer').css('display', 'block');
         });
     }
     window.makeDroppable = makeDroppable;

@@ -25,5 +25,12 @@ namespace IdeaTree
         {
             
         }
+        public static string ProfileImagePath
+        {
+            get
+            {
+                return "wwwroot/ProfileImages/";
+            }
+        }
     }
 }
