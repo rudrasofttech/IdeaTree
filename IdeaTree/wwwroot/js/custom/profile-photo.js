@@ -50,6 +50,7 @@ $('.upload-result').on('click', function (ev) {
 
 function popupResult(result) {
     $('.user-placeholder').addClass('hidden');
+    $('.crossicon').removeClass('hidden');
     $('.disimg').attr('src', result.src).removeClass('hidden');
     $('.pp-upload').val(result.src);
     $('#UploadPIModal').modal('hide');
@@ -60,4 +61,5 @@ $('.remove-image').on('click', function () {
     $('.user-placeholder').removeClass('hidden');
     $('.pp-upload').val('');
     $('#UploadPIModal').modal('hide');
-});
+    $('.crossicon').addClass('hidden');
+}); 

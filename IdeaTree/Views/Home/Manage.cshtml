@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Update Information";
+    var rpp = string.IsNullOrEmpty(Model.Image) ? "hidden" : "";
 }
 
 <link href="~/lib/croppie/croppie.css" rel="stylesheet" />
@@ -41,8 +42,8 @@
 
             <!-- Modal footer -->
             <div class="modal-footer" style="display:none">
-                <button type="button" class="upload-result btn btn-success" style="margin-left: 305px; ">Done</button>
-                <button type="button" class="remove-image btn btn-danger" style="float:right">Remove</button>
+                <button type="button" class="upload-result btn btn-success" style="float: right;">Done</button>
+                @*<button type="button" class="remove-image btn btn-danger" style="float:right">Remove</button>*@
                 @*<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>*@
             </div>
 
@@ -94,6 +95,7 @@
             <div class="form-group row">
                 <label class="col-sm-2 col-form-label">Picture</label>
                 <div class="col-sm-10">
+
                     <div class="profile-img-container">
                         @if (!string.IsNullOrEmpty(Model.Image))
                         {
@@ -107,13 +109,15 @@
                         }
                         <a href="javascript:void(0)" title="Upload new photo" data-toggle="modal" data-target="#UploadPIModal"><span class="fa fa-upload fa-5x"></span></a>
                     </div>
+                    <a href="javascript:void(0)" title="Remove photo" class="remove-image" data-toggle="modal" style="display: inline-block"><span class="fa fa-window-close-o crossicon @rpp"></span></a>
+
                     <input type="hidden" name="Image" class="pp-upload" />
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-2"></div>
-                <div class="col-sm-10">
-                    <div class="form-check">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-10">
+                        <div class="form-check">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <input class="form-check-input" asp-for="Newsletter">
                         <label class="form-check-label" asp-for="Newsletter">
                             Receive updates on ideas you have posted.
