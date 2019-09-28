@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -80,5 +81,11 @@ namespace IdeaTree.Models
         public string Bio { get; set; }
         public string Image { get; set; }
         public bool Newsletter { get; set; }
+    }
+
+    public class IdeaTempList
+    {
+        public int Id { get; set; }
+        public DateTime ActivityDate { get; set; }
     }
 }

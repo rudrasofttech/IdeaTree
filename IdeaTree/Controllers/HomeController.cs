@@ -27,11 +27,23 @@ namespace IdeaTree.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var ivc = new List<IdeaTempList>();
+
+            //Get indvidual tables list and add to cv list
+            ivc.AddRange(_context.Comment.Select(c => new IdeaTempList { Id = c.PostedTo.ID, ActivityDate = c.CreateDate }));
+            ivc.AddRange(_context.Vote.Select(v => new IdeaTempList { Id = v.VoteTo.ID, ActivityDate = v.CreateDate }));
+            ivc.AddRange(_context.Idea.Select(s => new IdeaTempList { Id = s.ID, ActivityDate = s.PostDate }));
+
+            //Sort ivc list by date and select didtinct Idea.Id
+            var ideaIds = ivc.OrderByDescending(x => x.ActivityDate).Select(x => x.Id).Distinct().ToList();
+
             var model = new HomeModel();
             model.Ideas = new List<Idea>();
-            model.Ideas.AddRange(_context.Idea.Include(i => i.PostedBy).OrderByDescending(t => t.PostDate).Take(10).ToList());
+            model.Ideas.AddRange(await _context.Idea.Include(i => i.PostedBy).Include(c => c.comments).Include(v => v.votes)
+                .OrderBy(d => ideaIds.IndexOf(d.ID)).Take(3).ToListAsync());
+
             return View(model);
         }
 

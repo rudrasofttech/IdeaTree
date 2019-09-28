@@ -28,7 +28,14 @@
                                     {
                                         imagepath = "<i class='far fa-user'></i>";
                                     }
-                                    <small>@Html.Raw(imagepath) by <a href="@Url.Content("~/profile/" + item.PostedBy.Name)">@item.PostedBy.Name</a></small>
+                            <small>
+                                @Html.Raw(imagepath) by
+                                <a href="@Url.Content("~/profile/" + item.PostedBy.Name)">
+                                    @item.PostedBy.Name
+                                </a>
+                                &nbsp;&nbsp;<i class='fa fa-comments-o' title="Comments"></i> @item.comments.Count()
+                                &nbsp;&nbsp;<i class='fa fa-thumbs-o-up' title="Votes"></i> @item.votes.Count()
+                            </small>
 
                                 }
                             </td>

@@ -27,6 +27,8 @@
 
                         @Html.Raw(imagepath + " by " + Model.idea.PostedBy.Name)
                     }
+                    &nbsp;&nbsp;<i class='fa fa-comments-o' title="Comments"></i> @Model.Comments.Count()
+                    &nbsp;&nbsp;<i class='fa fa-thumbs-o-up' title="Votes"></i> @Model.VoteCount
                 </small>
             </p>
             <p class="text-break text-justify">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace IdeaTree.Models
@@ -44,6 +45,9 @@ namespace IdeaTree.Models
         public DateTime? ModifyDate { get; set; }
         public Member ModifiedBy { get; set; }
         public StatusType Status { get; set; }
+
+        public ICollection<Vote> votes  { get; set; }
+        public ICollection<Comment> comments { get; set; }
     }
 
     public class Vote
