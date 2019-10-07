@@ -55,6 +55,7 @@ namespace IdeaTree.Models
         public bool HasVoted { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Idea> OtherIdeasFromOwner { get; set; }
+        public bool IsAdminOrOwner { get; set; }
         public IdeaPublicModel()
         {
             Comments = new List<Comment>();

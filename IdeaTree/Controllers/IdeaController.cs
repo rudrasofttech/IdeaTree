@@ -38,7 +38,8 @@ namespace IdeaTree.Controllers
                     var vote = _context.Vote.FirstOrDefault(t => t.VoteTo.ID == idea.ID && t.VotedBy.ID == m.ID);
                     if (vote == null) { model.HasVoted = false; }
                     else { model.HasVoted = true; }
-                    
+
+                    if (idea.PostedBy.ID == m.ID || m.MType== MemberType.Admin) { model.IsAdminOrOwner = true; }
                 }
                 model.Comments.AddRange(_context.Comment.Where(t => t.PostedTo.ID == idea.ID && t.Status != StatusType.Deleted).OrderByDescending(t => t.CreateDate).ToList());
                 model.OtherIdeasFromOwner.AddRange(_context.Idea.OrderByDescending(t => t.PostDate).Where(t => t.PostedBy.ID == idea.PostedBy.ID && t.ID != idea.ID).ToList());
@@ -47,6 +48,30 @@ namespace IdeaTree.Controllers
             return View(model);
         }
 
+        //EditIdea
+        [HttpPost]
+        [Authorize]
+        public IActionResult EditIdea(int Id, string IdeaTitle, string Description)
+        {
+            var postedIdea = _context.Idea.SingleOrDefault(x => x.ID == Id);
+
+            if (postedIdea != null)
+            {
+                if (IdeaTitle != null)
+                    postedIdea.Title = IdeaTitle;
+                if (Description != null)
+                    postedIdea.Description = Description;
+
+                _context.Update(postedIdea);
+                _context.SaveChanges();
+                return Json("success");
+            }
+            else
+            {
+                return Json("Idea not found!");
+            }
+
+        }
         [HttpGet]
         [Authorize]
         public JsonResult Vote(string id)
@@ -102,7 +127,8 @@ namespace IdeaTree.Controllers
         [HttpPost]
         public JsonResult PostComment(string id, string comment)
         {
-            if (HttpContext.User.Identities.Any(u => u.IsAuthenticated)) {
+            if (HttpContext.User.Identities.Any(u => u.IsAuthenticated))
+            {
                 var idea = _context.Idea
                     .FirstOrDefault(f => Utility.TextToURL(f.Title) == id.Trim());
                 Member m = _context.Member.FirstOrDefault(temp => temp.Phone == HttpContext.User.Identity.Name);
@@ -133,10 +159,11 @@ namespace IdeaTree.Controllers
 
         [Authorize]
         [HttpPost]
-        public JsonResult DeleteComment(int id) {
+        public JsonResult DeleteComment(int id)
+        {
             if (HttpContext.User.Identities.Any(u => u.IsAuthenticated))
             {
-                
+
                 var ct = _context.Comment.FirstOrDefault(f => f.ID == id && f.PostedBy.Phone == HttpContext.User.Identity.Name);
 
                 if (ct != null)

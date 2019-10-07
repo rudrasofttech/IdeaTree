@@ -3,12 +3,21 @@
     ViewData["Title"] = Model.idea != null ? Model.idea.Title : "";
 }
 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <div class="row">
     <div class="col-md-12">
         @if (Model.idea != null)
         {
             <h1 class="center">
-                @Model.idea.Title
+                @if (Model.IsAdminOrOwner)
+                {
+                    <span class="fas fa-pencil-alt btn-EditTitle" title="Edit Title"></span>
+                }
+                <span class="IdeaTitle">
+                    @Model.idea.Title
+                </span>
             </h1>
             <p class="center">
                 <small>
@@ -32,7 +41,13 @@
                 </small>
             </p>
             <p class="text-break text-justify">
-                @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.idea.Description).Replace("\n", "<br />"))
+                @if (Model.IsAdminOrOwner)
+                {
+                    <span class="fas fa-pencil-alt btn-EditDescription" title="Edit Description"></span>
+                }
+                <span class="idea-description">
+                    @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.idea.Description).Replace("\n", "<br />"))
+                </span>
             </p>
             <ul class="list-group list-group-horizontal-md">
                 <li class="list-group-item"><button class="btn btn-link" onclick="SubmitVote(this);"><i class="@Html.Raw(Model.HasVoted ? "fas" : "far") fa-thumbs-up fa-2x"></i><span class="votecounter">@Model.VoteCount</span></button></li>
@@ -48,6 +63,7 @@
             </ul>
             <div class="tab-content" id="ideaPageTabContent">
                 <div class="tab-pane active border-right border-left border-bottom" id="discussion" role="tabpanel" aria-labelledby="discussion-tab">
+
                     @if (Context.User.Identities.Any(i => i.IsAuthenticated))
                     {
                         <div class="p-3">
@@ -129,6 +145,34 @@
     </div>
 </div>
 
+@if (Model.IsAdminOrOwner)
+{
+    @*Edit Modal*@
+    <div class="modal fade" id="EditModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" asp-action="EditIdea" id="frmUpdateIdea">
+                    <input type="hidden" asp-for="idea.ID" name="Id" />
+                    <div class="modal-header">
+                        <h5 class="modal-title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-save">Save changes</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+
 @section Scripts{
     @if (Context.User.Identities.Any(i => i.IsAuthenticated))
     {
@@ -199,13 +243,50 @@
             function DeleteComment(id) {
                 alert("You are not logged in.");
             }
+
+        </script>
+    }
+    @if (Model.IsAdminOrOwner)
+    {
+        <script>
+            $(".btn-EditTitle,.btn-EditDescription").on("click", function () {
+                var body = $('#EditModal').find('.modal-body').empty();
+                var title = $('#EditModal').find('.modal-title').empty();
+                if ($(this).hasClass('btn-EditTitle')) {
+                    title.append("Edit Idea Title");
+                    body.append(`<input type="text" name="IdeaTitle" value="${$(".IdeaTitle").text().trim()}" class="form-control" />`);
+                }
+                if ($(this).hasClass('btn-EditDescription')) {
+                    title.append("Edit Idea Description");
+                    body.append(`<textarea class="form-control" rows="8"
+                                                                                    data-val="true" data-val-required="The Description field is required."
+                                                                                    id="Description" name="Description">${$(".idea-description").text().trim()}</textarea>`);
+                }
+                $('#EditModal').modal('show');
+            });
+
+            $('#frmUpdateIdea').submit(function (e) {
+                e.preventDefault();
+                var $form = $(this);
+                var posting = $.post($form.attr("action"), $form.serialize());
+                posting.done(function (r) {
+                    if (r == 'success') {
+                        $(`#${$form.closest("[role=dialog]").attr('id')}`).modal('hide');
+                        if ($form.find('[name=IdeaTitle]').length > 0) {
+                            var title = $('#frmUpdateIdea').find('[name=IdeaTitle]')[0].value.trim().replace(/\s+/g, "-");
+                            window.location.href = `/Idea/${title}`;
+                        }
+                    } else {
+                        alert(r);
+                    }
+                });
+            });
+
         </script>
     }
 
-    <script>
-        $(function () {
-            //$('#ideaPageTab li:first-child a').tab('show')
-        })
-    </script>
 }
+
+
+
 
