@@ -15,16 +15,22 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using System.Web;
+using Microsoft.AspNetCore.Hosting;
 
 namespace IdeaTree.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IdeaTreeContext _context;
+        private IHostingEnvironment _env;
 
-        public HomeController(IdeaTreeContext context)
+        public HomeController(IdeaTreeContext context, IHostingEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         public async Task<IActionResult> Index()
@@ -83,13 +89,14 @@ namespace IdeaTree.Controllers
         {
             if (ModelState.IsValid)
             {
+                 
                 Idea i = _context.Idea.FirstOrDefault(temp => temp.Title.ToLower().Trim() == model.Title.Trim().ToLower());
                 if (i == null)
                 {
                     i = new Idea();
-                    //i.Category = model.Category;
                     i.Description = model.Description;
                     i.PostDate = DateTime.UtcNow;
+                    i.Video = model.Video;
                     if (HttpContext.User.Identities.Any(u => u.IsAuthenticated))
                     {
                         Member m = _context.Member.FirstOrDefault(temp => temp.Phone == HttpContext.User.Identity.Name);
@@ -102,6 +109,28 @@ namespace IdeaTree.Controllers
                     i.Title = model.Title;
                     _context.Add(i);
                     await _context.SaveChangesAsync();
+
+                    foreach (IFormFile file in Request.Form.Files)
+                    {
+
+                        string fileName = Path.GetFileName(file.FileName);
+                        var webRoot = _env.WebRootPath;
+                        //var PathWithFolderName = System.IO.Path.Combine(webRoot, "MyFolder");
+                        var image = new IdeaImages();
+                        image.Image = fileName;
+                        image.Id = i.ID;
+                        _context.IdeaImages.Add(image);
+
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", fileName);
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+
+                        _context.SaveChanges();
+                    }
+
+
                     return RedirectToAction(nameof(Index));
                 }
                 else

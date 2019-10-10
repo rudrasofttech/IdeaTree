@@ -4,14 +4,16 @@ using IdeaTree.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdeaTree.Migrations
 {
     [DbContext(typeof(IdeaTreeContext))]
-    partial class IdeaTreeContextModelSnapshot : ModelSnapshot
+    [Migration("20191007210651_added new field video in table idea")]
+    partial class addednewfieldvideointableidea
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,8 +54,6 @@ namespace IdeaTree.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("IdeaImages");
-
                     b.Property<int?>("ModifiedByID");
 
                     b.Property<DateTime?>("ModifyDate");
@@ -79,23 +79,6 @@ namespace IdeaTree.Migrations
                     b.HasIndex("PostedByID");
 
                     b.ToTable("Idea");
-                });
-
-            modelBuilder.Entity("IdeaTree.Models.IdeaImages", b =>
-                {
-                    b.Property<int>("IdeaImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Id");
-
-                    b.Property<string>("Image");
-
-                    b.HasKey("IdeaImageId");
-
-                    b.HasIndex("Id");
-
-                    b.ToTable("IdeaImages");
                 });
 
             modelBuilder.Entity("IdeaTree.Models.ManageProfileModel", b =>
@@ -246,14 +229,6 @@ namespace IdeaTree.Migrations
                     b.HasOne("IdeaTree.Models.Member", "PostedBy")
                         .WithMany()
                         .HasForeignKey("PostedByID");
-                });
-
-            modelBuilder.Entity("IdeaTree.Models.IdeaImages", b =>
-                {
-                    b.HasOne("IdeaTree.Models.Idea", "Idea")
-                        .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("IdeaTree.Models.Member", b =>

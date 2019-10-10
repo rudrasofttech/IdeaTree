@@ -4,14 +4,16 @@ using IdeaTree.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace IdeaTree.Migrations
 {
     [DbContext(typeof(IdeaTreeContext))]
-    partial class IdeaTreeContextModelSnapshot : ModelSnapshot
+    [Migration("20191010014026_created table for IdeaImages")]
+    partial class createdtableforIdeaImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

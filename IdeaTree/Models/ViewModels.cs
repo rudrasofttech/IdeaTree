@@ -41,6 +41,8 @@ namespace IdeaTree.Models
         public string Description { get; set; }
         [Required]
         public CategoryType Category { get; set; }
+        public string  Video { get; set; }
+        //public string  IdeaImages { get; set; }
     }
 
     public class HomeModel

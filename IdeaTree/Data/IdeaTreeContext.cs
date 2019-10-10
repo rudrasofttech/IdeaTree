@@ -19,6 +19,8 @@ namespace IdeaTree.Models
         public DbSet<Vote> Vote { get; set; }
         public DbSet<Comment> Comment { get; set; }
         public DbSet<Message> Message { get; set; }
+        public DbSet<IdeaImages> IdeaImages { get; set; }
+        
         public DbSet<IdeaTree.Models.ManageProfileModel> ManageProfileModel { get; set; }
     }
 }

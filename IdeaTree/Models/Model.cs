@@ -46,10 +46,20 @@ namespace IdeaTree.Models
         public Member ModifiedBy { get; set; }
         public StatusType Status { get; set; }
 
+        public string Video { get; set; }
+        public string IdeaImages { get; set; }
         public ICollection<Vote> votes  { get; set; }
         public ICollection<Comment> comments { get; set; }
     }
 
+    public class IdeaImages
+    {
+        [Key]
+        public int IdeaImageId { get; set; }
+        public int Id { get; set; }
+        public  Idea Idea { get; set; }
+        public string Image { get; set; }
+    }
     public class Vote
     {
         public int ID { get; set; }
