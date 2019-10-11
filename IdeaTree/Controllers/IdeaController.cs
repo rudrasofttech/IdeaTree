@@ -41,7 +41,7 @@ namespace IdeaTree.Controllers
 
                     if (idea.PostedBy.ID == m.ID || m.MType== MemberType.Admin) { model.IsAdminOrOwner = true; }
                 }
-                model.Comments.AddRange(_context.Comment.Where(t => t.PostedTo.ID == idea.ID && t.Status != StatusType.Deleted).OrderByDescending(t => t.CreateDate).ToList());
+                model.Comments.AddRange(_context.Comment.Include(i => i.PostedBy).Where(t => t.PostedTo.ID == idea.ID && t.Status != StatusType.Deleted).OrderByDescending(t => t.CreateDate).ToList());
                 model.OtherIdeasFromOwner.AddRange(_context.Idea.OrderByDescending(t => t.PostDate).Where(t => t.PostedBy.ID == idea.PostedBy.ID && t.ID != idea.ID).ToList());
             }
             model.idea = idea;
