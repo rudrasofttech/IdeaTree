@@ -28,6 +28,7 @@ namespace IdeaTree.Controllers
             var idea = _context.Idea
                 .Include(i => i.PostedBy)
                 .Include(i => i.ModifiedBy)
+                .Include(i=>i.IdeaImage)
                 .FirstOrDefault(f => Utility.TextToURL(f.Title) == id.Trim());
             if (idea != null)
             {
@@ -51,7 +52,7 @@ namespace IdeaTree.Controllers
         //EditIdea
         [HttpPost]
         [Authorize]
-        public IActionResult EditIdea(int Id, string IdeaTitle, string Description)
+        public IActionResult EditIdea(int Id, string IdeaTitle, string Description,string video)
         {
             var postedIdea = _context.Idea.SingleOrDefault(x => x.ID == Id);
 
@@ -61,6 +62,8 @@ namespace IdeaTree.Controllers
                     postedIdea.Title = IdeaTitle;
                 if (Description != null)
                     postedIdea.Description = Description;
+                if(video!=null)
+                    postedIdea.Video = video;
 
                 _context.Update(postedIdea);
                 _context.SaveChanges();

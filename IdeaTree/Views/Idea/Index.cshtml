@@ -6,18 +6,22 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script type="text/javascript" src="~/html5gallery/html5gallery.js"></script>
+
 <div class="row">
     <div class="col-md-12">
         @if (Model.idea != null)
         {
             <h1 class="center">
+                <span class="IdeaTitle">
+                    @Model.idea.Title
+                </span>
                 @if (Model.IsAdminOrOwner)
                 {
                     <span class="fas fa-pencil-alt btn-EditTitle" title="Edit Title"></span>
                 }
-                <span class="IdeaTitle">
-                    @Model.idea.Title
-                </span>
+
             </h1>
 
             <p class="center">
@@ -41,21 +45,57 @@
                     &nbsp;&nbsp;<i class='fa fa-thumbs-o-up' title="Votes"></i> @Model.VoteCount
                 </small>
             </p> <br />
-            <div>
-                @*add embedd video like youtube*@
+            @*<div>
+                    @if (Model.idea.Video != null)
+                    {
 
-                <input type="hidden" asp-for="idea.Video" id="TxtUrl" class="form-control" />
+                        <input type="text" asp-for="idea.Video" id="TxtUrl" name="video" class="form-control" />
+                        <iframe id="video" width="420" height="315" frameborder="0" allowfullscreen></iframe>
+                        @if (Model.IsAdminOrOwner)
+                        {
+                            <span class="fas fa-pencil-alt btn-EditVideo" title="Edit Video"></span>
+                        }
+                    }
+                </div>*@
 
-                <iframe id="video" width="420" height="315" frameborder="0" allowfullscreen></iframe>
+            var ideaimage = @Model.idea.IdeaImage;
+            if (Model.idea.Video != null)
+            {
+
+                @if (Model.IsAdminOrOwner)
+                {
+                   
+                    <span class="fas fa-pencil-alt btn-EditVideo" style="margin-left: 0px;margin-top: -4px;margin-bottom: -4px;" title="Edit Video">Edit Video</span>
+                }
+
+            }
+
+            <div style="display:none;" class="html5gallery" data-skin="gallery" data-width="780" data-height="272">
+                <!-- Add images to Gallery -->
+                @foreach (var img in Model.idea.IdeaImage)
+                {
+                    <a href="/IdeaImages/@img.Image"><img src="/IdeaImages/@img.Image" alt="@img.Image"></a>
+
+                }
+                @if (Model.idea.Video != null)
+                {
+
+                    <input type="text" asp-for="idea.Video" id="TxtUrl" name="video" class="form-control" />
+                    <!-- Add Youtube video to Gallery -->
+                    <a href="@Model.idea.Video" id="video"><img src="https://qphs.fs.quoracdn.net/main-qimg-8d607f599a4b49a5be3805d0736654ff" id="thumbnail" alt="Embedd Video"></a>
+                }
             </div>
+
+
             <p class="text-break text-justify">
+
+                <span class="idea-description">
+                    @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.idea.Description).Replace("\n", "<br />"))
+                </span>
                 @if (Model.IsAdminOrOwner)
                 {
                     <span class="fas fa-pencil-alt btn-EditDescription" title="Edit Description"></span>
                 }
-                <span class="idea-description">
-                    @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.idea.Description).Replace("\n", "<br />"))
-                </span>
             </p>
 
             <br />
@@ -259,7 +299,7 @@
     @if (Model.IsAdminOrOwner)
     {
         <script>
-            $(".btn-EditTitle,.btn-EditDescription").on("click", function () {
+            $(".btn-EditTitle,.btn-EditDescription,.btn-EditVideo").on("click", function () {
                 var body = $('#EditModal').find('.modal-body').empty();
                 var title = $('#EditModal').find('.modal-title').empty();
                 if ($(this).hasClass('btn-EditTitle')) {
@@ -268,9 +308,13 @@
                 }
                 if ($(this).hasClass('btn-EditDescription')) {
                     title.append("Edit Idea Description");
-                    body.append(`<textarea class="form-control" rows="8"
-                                                                                                    data-val="true" data-val-required="The Description field is required."
-                                                                                                    id="Description" name="Description">${$(".idea-description").text().trim()}</textarea>`);
+                    body.append(`<textarea class="form-control" rows="8"id="Description" name="Description">${$(".idea-description").text().trim()}</textarea>`);
+                }
+
+                if ($(this).hasClass('btn-EditVideo')) {
+                    debugger;
+                    title.append("Edit Idea YoutubeVideo");
+                    body.append(`<input type="text" name="video" value="${$("#TxtUrl").val()}" class="form-control" />`);
                 }
                 $('#EditModal').modal('show');
             });
@@ -281,11 +325,13 @@
                 var posting = $.post($form.attr("action"), $form.serialize());
                 posting.done(function (r) {
                     if (r == 'success') {
+                        debugger;
                         $(`#${$form.closest("[role=dialog]").attr('id')}`).modal('hide');
                         if ($form.find('[name=IdeaTitle]').length > 0) {
                             var title = $('#frmUpdateIdea').find('[name=IdeaTitle]')[0].value.trim().replace(/\s+/g, "-");
                             window.location.href = `/Idea/${title}`;
                         }
+
                     } else {
                         alert(r);
                     }
@@ -294,19 +340,17 @@
 
             //add video script
             $(document).ready(function () {
-                var url = $("#TxtUrl").val();
-                var id = url.substr(url.length - 11);
-                //In case youtube change video id length
-                //var id = url.substring(url.lastIndexOf('v=') + 2);
-                $("#video")[0].src = `//www.youtube.com/embed/${id}`;
-                $("#video").show();
+                //var url = $("#TxtUrl").val();
+                //var id = url.substr(url.length - 11);
+
+                ////In case youtube change video id length
+                ////var id = url.substring(url.lastIndexOf('v=') + 2);
+                //$("#video")[0].src = `//www.youtube.com/embed/${id}`;
+                //$('#thumbnail').attr('src', 'http://img.youtube.com/vi/' + id + '/0.jpg');
+                //$("#video").show();
             })
 
         </script>
     }
 
 }
-
-
-
-

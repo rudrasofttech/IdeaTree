@@ -47,9 +47,9 @@ namespace IdeaTree.Models
         public StatusType Status { get; set; }
 
         public string Video { get; set; }
-        public string IdeaImages { get; set; }
         public ICollection<Vote> votes  { get; set; }
         public ICollection<Comment> comments { get; set; }
+        public ICollection<IdeaImages> IdeaImage { get; set; }
     }
 
     public class IdeaImages
