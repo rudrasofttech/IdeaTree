@@ -117,11 +117,13 @@ namespace IdeaTree.Controllers
                         var webRoot = _env.WebRootPath;
                         //var PathWithFolderName = System.IO.Path.Combine(webRoot, "MyFolder");
                         var image = new IdeaImages();
+                        fileName = string.Format("{0}-{1}", Guid.NewGuid(), fileName);
+
                         image.Image = fileName;
                         image.Id = i.ID;
                         _context.IdeaImages.Add(image);
 
-                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\IdeaImages", fileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", fileName);
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
                         {
                             await file.CopyToAsync(fileStream);

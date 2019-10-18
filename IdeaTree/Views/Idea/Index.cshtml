@@ -1,13 +1,68 @@
 ﻿@model IdeaTree.Models.IdeaPublicModel
 @{
     ViewData["Title"] = Model.idea != null ? Model.idea.Title : "";
+    int cCounter = 1;
 }
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 <script type="text/javascript" src="~/html5gallery/html5gallery.js"></script>
+
+<style>
+    body {
+        background-color: #f5f5f5;
+    }
+
+    .imagePreview {
+        width: 100%;
+        height: 100px;
+        background-position: center center;
+        background: url(http://cliquecities.com/assets/no-image-e3699ae23f866f6cbdf8ba2443ee5c4e.jpg);
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+        box-shadow: 0px -3px 6px 2px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary {
+        display: block;
+        border-radius: 0px;
+        box-shadow: 0px 4px 6px 2px rgba(0,0,0,0.2);
+        margin-top: -5px;
+    }
+
+    .imgUp {
+        margin-bottom: 15px;
+    }
+
+    .del {
+        position: absolute;
+        top: 0px;
+        right: 15px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255,255,255,0.6);
+        cursor: pointer;
+    }
+
+    .imgAdd {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background-color: #4bd7ef;
+        color: #fff;
+        box-shadow: 0px 0px 2px 1px rgba(0,0,0,0.2);
+        text-align: center;
+        line-height: 30px;
+        margin-top: 0px;
+        cursor: pointer;
+        font-size: 15px;
+    }
+</style>
 
 <div class="row">
     <div class="col-md-12">
@@ -45,27 +100,15 @@
                     &nbsp;&nbsp;<i class='fa fa-thumbs-o-up' title="Votes"></i> @Model.VoteCount
                 </small>
             </p> <br />
-            @*<div>
-                    @if (Model.idea.Video != null)
-                    {
-
-                        <input type="text" asp-for="idea.Video" id="TxtUrl" name="video" class="form-control" />
-                        <iframe id="video" width="420" height="315" frameborder="0" allowfullscreen></iframe>
-                        @if (Model.IsAdminOrOwner)
-                        {
-                            <span class="fas fa-pencil-alt btn-EditVideo" title="Edit Video"></span>
-                        }
-                    }
-                </div>*@
 
             var ideaimage = @Model.idea.IdeaImage;
-            if (Model.idea.Video != null)
-            {
 
-                @if (Model.IsAdminOrOwner)
+            if (Model.IsAdminOrOwner)
+            {
+                @if (Model.idea.Video != null || Model.idea.IdeaImage != null)
                 {
-                   
-                    <span class="fas fa-pencil-alt btn-EditVideo" style="margin-left: 0px;margin-top: -4px;margin-bottom: -4px;" title="Edit Video">Edit Video</span>
+                    <span class="fas fa-pencil-alt btn-EditVideo" style="margin-left: 0px;margin-top: -4px;margin-bottom: -4px;" title="Edit Video & Images">Edit Video&Images</span>
+
                 }
 
             }
@@ -74,7 +117,7 @@
                 <!-- Add images to Gallery -->
                 @foreach (var img in Model.idea.IdeaImage)
                 {
-                    <a href="/IdeaImages/@img.Image"><img src="/IdeaImages/@img.Image" alt="@img.Image"></a>
+                    <a href="~/images/@img.Image"><img src="/images/@img.Image" alt="@img.Image"></a>
 
                 }
                 @if (Model.idea.Video != null)
@@ -223,6 +266,67 @@
 }
 
 
+@*//edit modal for images and video*@
+@if (Model.IsAdminOrOwner)
+{
+    @*Edit Modal*@
+    <div class="modal fade" id="EditImagesVideoModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form method="post" asp-action="EditIdea" id="frmUpdateIdeaImgVideo" enctype="multipart/form-data">
+                    <input type="hidden" asp-for="idea.ID" name="Id1" />
+                    <input type="hidden" name="AllImagepath" id="AllImagepath" />
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit Video and Images</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label asp-for="idea.Video">YouTube Video</label>
+                        <input type="text" name="video" id="videourl" class="form-control" />
+                        <br />
+                        @if (Model.idea.IdeaImage != null)
+                        {
+                            @foreach (var img in Model.idea.IdeaImage)
+                            {
+                                cCounter++;
+                                <div class="Idea-pic">
+                                    <img src="/images/@img.Image" alt="@img.Image" name="Images" id="Images1" height="108" width="95">
+                                    <i class="fa fa-times delgg"></i>
+
+
+                                </div>
+                            }
+                        }
+                        <br />
+                        <div class="row">
+                            <div class="col-md-3 imgUp">
+                                <div class="imagePreview"></div>
+                                <label class="btn btn-primary">
+                                    Upload<input type="file" class="uploadFile img" value="Upload Photo" Name="uploadImage[0]" multiple style="width: 0px;height: 0px;overflow: hidden;">
+                                </label>
+                            </div>
+                            @if (cCounter < 5)
+                            {
+                                <i class="fa fa-plus imgAdd"></i>
+
+                            }
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success btn-saveImgVid">Save changes</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+}
+
+
 @section Scripts{
     @if (Context.User.Identities.Any(i => i.IsAuthenticated))
     {
@@ -299,7 +403,73 @@
     @if (Model.IsAdminOrOwner)
     {
         <script>
-            $(".btn-EditTitle,.btn-EditDescription,.btn-EditVideo").on("click", function () {
+
+            var count = @cCounter;
+            var TotalCount = 0;
+            var upcounter = 0;
+
+            function UploadMultiple() {
+                count++;
+                TotalCount = +count;
+                if (TotalCount >= 5) {
+                    $(".imgAdd").addClass("hidden");
+                }
+            }
+
+            $(".imgAdd").click(function () {
+                UploadMultiple()
+                $(this).closest(".row").find('.imgAdd').before('<div class="col-md-3 imgUp"><div class="imagePreview"></div><label class="btn btn-primary">Upload<input type="file" class="uploadFile img" value="Upload Photo"  name="uploadImage[' + [++upcounter] + ']" multiple  style="width:0px;height:0px;overflow:hidden;"></label><i class="fa fa-times del"></i></div>');
+            });
+
+            $(document).on("click", "i.del", function () {
+                $(this).parent().remove();
+                count--;
+                $(".imgAdd").removeClass("hidden");
+            });
+
+            $("i.delgg").on("click", function () {
+                debugger;
+                var Imagepath = $(this).closest(".Idea-pic").find('img').attr('src');
+                console.log(Imagepath);
+                $('#AllImagepath').val(function (i, val) {
+                    return val + (!val ? '' : ',') + Imagepath;
+                            });
+
+                $(this).closest('div.Idea-pic').remove();
+                count--;
+
+                $(".imgAdd").removeClass("hidden");
+            });
+
+
+            $(function () {
+                $(document).on("change", ".uploadFile", function () {
+                    var filesize = (this.files[0].size);
+                    if (filesize > 5000000) {
+                        alert('File is greater than 5Mb');
+                    }
+                    else {
+                        var uploadFile = $(this);
+                        var files = !!this.files ? this.files : [];
+                        if (!files.length || !window.FileReader) return;
+                        if (/^image/.test(files[0].type)) {
+                            var reader = new FileReader();
+                            reader.readAsDataURL(files[0]);
+                            reader.onloadend = function () {
+                                uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+                            }
+                        }
+                    }
+                });
+            });
+
+
+
+
+
+
+
+            $(".btn-EditTitle,.btn-EditDescription").on("click", function () {
                 var body = $('#EditModal').find('.modal-body').empty();
                 var title = $('#EditModal').find('.modal-title').empty();
                 if ($(this).hasClass('btn-EditTitle')) {
@@ -311,11 +481,11 @@
                     body.append(`<textarea class="form-control" rows="8"id="Description" name="Description">${$(".idea-description").text().trim()}</textarea>`);
                 }
 
-                if ($(this).hasClass('btn-EditVideo')) {
-                    debugger;
-                    title.append("Edit Idea YoutubeVideo");
-                    body.append(`<input type="text" name="video" value="${$("#TxtUrl").val()}" class="form-control" />`);
-                }
+                //if ($(this).hasClass('btn-EditVideo')) {
+                //    debugger;
+                //    title.append("Edit Idea YoutubeVideo");
+                //    body.append(`<input type="text" name="video" value="${$("#TxtUrl").val()}" class="form-control" />`);
+                //}
                 $('#EditModal').modal('show');
             });
 
@@ -338,9 +508,19 @@
                 });
             });
 
+
+
+
+            $(".btn-EditVideo").on("click", function () {
+                $("#EditImagesVideoModal").modal('show');
+
+            });
+
             //add video script
             $(document).ready(function () {
-                //var url = $("#TxtUrl").val();
+                debugger;
+                var url = $("#TxtUrl").val();
+    $("#videourl").val(url);
                 //var id = url.substr(url.length - 11);
 
                 ////In case youtube change video id length

@@ -9,16 +9,25 @@ using IdeaTree;
 using IdeaTree.Models;
 using Microsoft.AspNetCore.Authorization;
 
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.Web;
+
 namespace IdeaTree.Controllers
 {
 
     public class IdeaController : Controller
     {
         private readonly IdeaTreeContext _context;
+        private IHostingEnvironment _env;
 
-        public IdeaController(IdeaTreeContext context)
+        public IdeaController(IdeaTreeContext context, IHostingEnvironment env)
         {
             _context = context;
+
+            _env = env;
+
         }
 
         [HttpGet]
@@ -28,7 +37,7 @@ namespace IdeaTree.Controllers
             var idea = _context.Idea
                 .Include(i => i.PostedBy)
                 .Include(i => i.ModifiedBy)
-                .Include(i=>i.IdeaImage)
+                .Include(i => i.IdeaImage)
                 .FirstOrDefault(f => Utility.TextToURL(f.Title) == id.Trim());
             if (idea != null)
             {
@@ -40,7 +49,7 @@ namespace IdeaTree.Controllers
                     if (vote == null) { model.HasVoted = false; }
                     else { model.HasVoted = true; }
 
-                    if (idea.PostedBy.ID == m.ID || m.MType== MemberType.Admin) { model.IsAdminOrOwner = true; }
+                    if (idea.PostedBy.ID == m.ID || m.MType == MemberType.Admin) { model.IsAdminOrOwner = true; }
                 }
                 model.Comments.AddRange(_context.Comment.Include(i => i.PostedBy).Where(t => t.PostedTo.ID == idea.ID && t.Status != StatusType.Deleted).OrderByDescending(t => t.CreateDate).ToList());
                 model.OtherIdeasFromOwner.AddRange(_context.Idea.OrderByDescending(t => t.PostDate).Where(t => t.PostedBy.ID == idea.PostedBy.ID && t.ID != idea.ID).ToList());
@@ -52,28 +61,51 @@ namespace IdeaTree.Controllers
         //EditIdea
         [HttpPost]
         [Authorize]
-        public IActionResult EditIdea(int Id, string IdeaTitle, string Description,string video)
+        public IActionResult EditIdea(int Id, string IdeaTitle, string Description, string video, int Id1, string AllImagepath)
         {
-            var postedIdea = _context.Idea.SingleOrDefault(x => x.ID == Id);
+            var imgToRemove = AllImagepath.Split(',');
+            var postedIdea = _context.Idea.Where(x => x.ID == Id || x.ID == Id1).SingleOrDefault();
+            var Imageidea = _context.IdeaImages.Where(x => x.Id == Id1);
 
-            if (postedIdea != null)
+            if (imgToRemove.Length > 0)
             {
-                if (IdeaTitle != null)
-                    postedIdea.Title = IdeaTitle;
-                if (Description != null)
-                    postedIdea.Description = Description;
-                if(video!=null)
-                    postedIdea.Video = video;
-
-                _context.Update(postedIdea);
+                for (int i = 0; i < imgToRemove.Length; i++)
+                {
+                    var img = Imageidea.SingleOrDefault(x => x.Image.ToUpper() == imgToRemove[i].Trim().Substring(8).ToUpper());
+                    _context.IdeaImages.Remove(img);
+                }
                 _context.SaveChanges();
-                return Json("success");
-            }
-            else
+            };
+
+            foreach (IFormFile file in Request.Form.Files)
             {
-                return Json("Idea not found!");
+                string fileName = Path.GetFileName(file.FileName);
+                fileName = string.Format("{0}-{1}", Guid.NewGuid(), fileName);
+                var webRoot = _env.WebRootPath;
+                //var PathWithFolderName = System.IO.Path.Combine(webRoot, "MyFolder");
+                var image = new IdeaImages();
+                image.Image = fileName;
+                image.Id = Id1;
+                _context.IdeaImages.Add(image);
+
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\images", fileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyToAsync(fileStream);
+                }
             }
 
+
+            if (IdeaTitle != null)
+                postedIdea.Title = IdeaTitle;
+            if (Description != null)
+                postedIdea.Description = Description;
+            if (video != null)
+                postedIdea.Video = video;
+
+            _context.Update(postedIdea);
+            _context.SaveChanges();
+            return Json("success");
         }
         [HttpGet]
         [Authorize]
@@ -185,5 +217,6 @@ namespace IdeaTree.Controllers
                 return Json(new { result = false, message = "You are not logged in." });
             }
         }
+
     }
 }
