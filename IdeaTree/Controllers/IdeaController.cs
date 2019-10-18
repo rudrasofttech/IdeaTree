@@ -63,11 +63,15 @@ namespace IdeaTree.Controllers
         [Authorize]
         public IActionResult EditIdea(int Id, string IdeaTitle, string Description, string video, int Id1, string AllImagepath)
         {
-            var imgToRemove = AllImagepath.Split(',');
+            string[] imgToRemove = null;
+            if (!string.IsNullOrEmpty(AllImagepath))
+            {
+                imgToRemove = AllImagepath.Split(',');
+            }
             var postedIdea = _context.Idea.Where(x => x.ID == Id || x.ID == Id1).SingleOrDefault();
             var Imageidea = _context.IdeaImages.Where(x => x.Id == Id1);
 
-            if (imgToRemove.Length > 0)
+            if (imgToRemove != null && imgToRemove.Length > 0)
             {
                 for (int i = 0; i < imgToRemove.Length; i++)
                 {
