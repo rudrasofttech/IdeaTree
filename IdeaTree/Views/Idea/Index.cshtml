@@ -133,7 +133,7 @@
             <p class="text-break text-justify">
 
                 <span class="idea-description">
-                    @Html.Raw(System.Net.WebUtility.HtmlEncode(Model.idea.Description).Replace("\n", "<br />"))
+                    @Html.Raw((Model.idea.Description).Replace("\n", "<br />"))
                 </span>
                 @if (Model.IsAdminOrOwner)
                 {

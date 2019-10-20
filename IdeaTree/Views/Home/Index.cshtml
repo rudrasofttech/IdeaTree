@@ -16,7 +16,7 @@
                         <tr>
                             <td>
                                 <h4 class="card-title"><a href="@Url.Content("~/Idea/" + IdeaTree.Utility.TextToURL(item.Title))"><i class="far fa-lightbulb"></i> @item.Title</a></h4>
-                                <p class="card-text">@item.Description.Substring(0, item.Description.Length > 100 ? 100 : item.Description.Length)</p>
+                                <p class="card-text">@Html.Raw(item.Description.Substring(0, item.Description.Length > 100 ? 100 : item.Description.Length))</p>
                                 @if (item.PostedBy != null)
                                 {
                                     var imagepath = @item.PostedBy.Image;
@@ -28,14 +28,14 @@
                                     {
                                         imagepath = "<i class='far fa-user'></i>";
                                     }
-                            <small>
-                                @Html.Raw(imagepath) by
-                                <a href="@Url.Content("~/profile/" + item.PostedBy.Name)">
-                                    @item.PostedBy.Name
-                                </a>
-                                &nbsp;&nbsp;<i class='fa fa-comments-o' title="Comments"></i> @item.comments.Count()
-                                &nbsp;&nbsp;<i class='fa fa-thumbs-o-up' title="Votes"></i> @item.votes.Count()
-                            </small>
+                                    <small>
+                                        @Html.Raw(imagepath) by
+                                        <a href="@Url.Content("~/profile/" + item.PostedBy.Name)">
+                                            @item.PostedBy.Name
+                                        </a>
+                                        &nbsp;&nbsp;<i class='fa fa-comments-o' title="Comments"></i> @item.comments.Count()
+                                        &nbsp;&nbsp;<i class='fa fa-thumbs-o-up' title="Votes"></i> @item.votes.Count()
+                                    </small>
 
                                 }
                             </td>
